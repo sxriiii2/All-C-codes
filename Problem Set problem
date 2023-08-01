@@ -1,0 +1,64 @@
+/*In a shop, various products are there, but in the ledger, respective product IDs are not in order.
+Scan n dynamic product IDs and sort them in order using sortProdID_Regno and also mention an
+index of given product Id
+*/
+
+
+code:
+
+//1. include the required libraries
+//2.declare a structure such that prodID can maximum take 6 characters and include cost and
+quantity integers
+//3. void the code and for a=0 and a<n, let it be so that a=a+1, then scan prodID prodName cost
+and quantity
+//4. after voiding the statement again introduce integers a, t , b ,N, c and d and introduce a char
+variable ‘Name’ with 5 character spaces
+//5. structure product is created alnog with required attributes
+//6. function ReadProd_21BCE3474 scans all values to be input into a list
+//7. fucntion finProd_21BCE3474 seacrhes through inputs using input name and displays it
+//8. functoin printProd_21BCE3474 calculates the total cost and quantity and prints it.
+
+
+Code:
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+void sortProdID_21BCE3474(int N[],int c,int check){
+ int a;
+ int b;
+ int t;
+ for(a=0;a<c;a++){
+ for(b=a+1;b<c;b++){
+ if(N[a] > N[b]) {
+ t = N[a];
+ N[a] = N[b];
+ N[b] = t;
+ }
+ }
+ }
+ for(a=0;a<c;a++){
+ printf("%d\n",N[a]);
+ }
+
+ for(a=0;a<c;a++){
+ if(N[a]==check){
+ printf("%d\n",a);
+ }
+ }
+
+}
+int main()
+{
+ int c;
+ scanf("%d",&c);
+ int *N;
+ N=(int*)calloc(c,sizeof(int));
+ int a;
+ for(a=0;a<c;a++){
+ scanf("%d",&N[a]);
+ }
+ int check;
+ scanf("%d",&check);
+ sortProdID_21BCE3474(N,c,check);
+
+}
