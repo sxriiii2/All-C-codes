@@ -1,0 +1,85 @@
+Question:
+Develop C program with following functions
+void readProjectName_RegNo(char *name);
+void readProjectScores_RegNo(int score[4]);
+void readProj_ApprovalScore_RegNo(int *avg);
+int ApprovedOrRejected_RegNo (int *marks);
+to read a project name, four scores of a Project. Also get a score from user which is used to check
+whether project can be approved or not, using above function signatures. Calculate total of the four
+scores of the project and compare with ApprovalScore and display whether “ProjectName has been
+Approved”, based on total score greater than or equal to Approval score, otherwise display,
+“ProjectName has been Rejected”. Make sure all scores are entered in the range 0 to 100, otherwise
+specify “Not in Range” message to the user.
+
+
+
+#include <stdio.h>
+
+// Function to read the project name and registration number
+void readProjectName_RegNo(char *name) {
+    printf("Enter the project name: ");
+    scanf("%s", name);
+}
+
+// Function to read the four project scores
+void readProjectScores_RegNo(int score[4]) {
+    for (int i = 0; i < 4; i++) {
+        printf("Enter score %d: ", i+1);
+        scanf("%d", &score[i]);
+        // Check if score is within range
+        if (score[i] < 0 || score[i] > 100) {
+            printf("Score not in range\n");
+            break;
+        }
+    }
+}
+
+// Function to read the project approval score
+void readProj_ApprovalScore_RegNo(int *avg) {
+    printf("Enter the project approval score: ");
+    scanf("%d", avg);
+    // Check if approval score is within range
+    if (*avg < 0 || *avg > 100) {
+        printf("Approval score not in range\n");
+    }
+}
+
+// Function to determine if the project has been approved or rejected
+int ApprovedOrRejected_RegNo(int *marks, int *avg) {
+    int total = 0;
+    for (int i = 0; i < 4; i++) {
+        total += marks[i];
+    }
+    if (total >= *avg) {
+        return 1; // Project has been approved
+    } else {
+        return 0; // Project has been rejected
+    }
+}
+
+int main() {
+    char name[50];
+    int scores[4];
+    int avg;
+
+    // Read the project name and registration number
+    readProjectName_RegNo(name);
+
+    // Read the project scores
+    readProjectScores_RegNo(scores);
+
+    // Read the project approval score
+    readProj_ApprovalScore_RegNo(&avg);
+
+    // Determine if the project has been approved or rejected
+    int result = ApprovedOrRejected_RegNo(scores, &avg);
+
+    // Display the result
+    if (result == 1) {
+        printf("%s has been Approved\n", name);
+    } else {
+        printf("%s has been Rejected\n", name);
+    }
+
+    return 0;
+}
