@@ -1,0 +1,290 @@
+1. Develop the coding to Show the result of inserting 3,1,4,6,9,2,5,7 into an
+intialy empty binary search tree and represent the Preorder, Inorder and Post
+order traversal methods result.
+
+
+
+2. Implement the program to perform various Binary Search Tree (BST)
+operations performed such as Insrtion, Deletion, Serach, FindMAX and
+FindMIN.
+
+
+3. Design the functions to identify the number of leaves and height of the tree for
+the given BST.
+
+
+
+
+Question 1:
+Code:
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
+struct N {
+int x;
+struct N *L;
+struct N *R;
+};
+N* nn(int x){
+N* temp = new N;
+temp->x = x;
+temp->L = temp->R = NULL;
+return temp;
+}
+void preorder(struct N* n)
+{
+if (n == NULL){
+return ;
+}
+cout << n->x << " ";
+preorder(n->L);
+preorder(n->R);
+}
+void postorder(struct N* n)
+{
+if (n == NULL){
+return ;
+}
+postorder(n->L);
+postorder(n->R);
+cout << n->x << " ";
+}
+void inorder(struct N* n){
+if (n == NULL)
+return ;
+inorder(n->L);
+cout << n->x << " ";
+inorder(n->R);
+}
+int main(){
+struct N *r=nn(3);
+r->L=nn(1);
+r->R=nn(4);
+r->L->R=nn(2);
+r->R->R=nn(6);
+r->R->R->L=nn(5);
+r->R->R->R=nn(9);
+r->R->R->R->L=nn(7);
+cout << "\nInorder reversal: ";
+inorder(r);
+cout << "\nPreorder reversal: ";
+preorder(r);
+cout << "\nPostorder reversal: ";
+postorder(r);
+cout << endl << "This code is executed and run by Surindernath Sivakumar 21BCE3474";
+}
+
+
+
+
+
+Question 2:
+Code:
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
+struct n{
+int x;
+struct n *L;
+struct n *R;
+};
+struct n *getnn(int y){
+struct n *nn = (struct n*)malloc(sizeof(struct n));
+nn->x = y;
+nn->L = NULL;
+nn->R = NULL;
+return nn;
+}
+struct n *insertionoperation(struct n *r, int y){
+if(r == NULL){
+return getnn(y);
+}
+if(r->x < y){
+r->R = insertionoperation(r->R,y);
+}
+else if(r->x > y){
+r->L = insertionoperation(r->L,y);
+}
+return r;
+}
+void inorder(struct n *r){
+if(r == NULL)
+return;
+inorder(r->L);
+printf("%d ",r->x);
+inorder(r->R);
+}
+struct n* search(struct n* r, int x){
+if (r == NULL || r->x == x){
+return r;
+}
+if (r->x < x){
+return search(r->R, x);
+}
+return search(r->L, x);
+}
+int FindMAX(n* r)
+{
+if (r == NULL){
+return INT8_MAX;
+}
+int g = r->x;
+int left_b = FindMAX(r->L);
+int right_b = FindMAX(r->R);
+if (left_b > g){
+g = left_b;
+}
+if (right_b > g){
+g = right_b;
+}
+return g;
+}
+int FindMIN(n *r){
+if(r==NULL){
+return INT8_MIN;
+}
+int h=r->x;
+int left_c=FindMIN(r->L);
+int right_c=FindMIN(r->R);
+if(left_c<h){
+h=left_c;
+}
+if(right_c<h){
+h=right_c;
+}
+return h;
+}
+int getrm(struct n *r){
+struct n *temp = r;
+while(temp->L != NULL){ temp = temp->L;}
+return temp->x;
+}
+struct n *deletionoperation(struct n *r, int y){
+if(r == NULL){
+return NULL;
+}
+if(r->x < y){
+r->R = deletionoperation(r->R,y);
+}
+else if(r->x > y){
+r->L = deletionoperation(r->L,y);
+}
+else{
+if(r->L == NULL && r->R == NULL){
+free(r);
+return NULL;
+}
+else if(r->L == NULL){
+struct n *temp = r->R;
+free(r);
+return temp;
+}
+else if(r->R == NULL){
+struct n *temp = r->L;
+free(r);
+return temp;
+}
+else{
+int rm = getrm(r->R);
+r->x = rm;
+r->R = deletionoperation(r->R,rm);
+}
+}
+return r;
+}
+int main(){
+struct n *r = NULL;
+r = insertionoperation(r,7);
+r = insertionoperation(r,22);
+r = insertionoperation(r,203);
+r = insertionoperation(r,96);
+r = insertionoperation(r,15);
+r = insertionoperation(r,62);
+cout<< "Original Tree: ";
+inorder(r);
+cout<< endl;
+r = deletionoperation(r,62);
+cout<< " Tree After Deletion Of An Element: ";
+inorder(r);
+cout<< endl;
+cout<<"MAX is \n"<<FindMAX(r)<<endl;
+cout<<"MIN is \n"<<FindMIN(r)<<endl;
+return 0;
+cout << "This code is executed and run by Surindernath Sivakumar 21BCE3474";
+}
+
+
+
+
+Question 3:
+Code:
+#include<iostream>
+#include<string.h>
+using namespace std;
+struct n{
+int a;
+struct n* L;
+struct n* R;
+};
+int l(struct n* n){
+if (n==NULL){
+return 0;
+}
+if (n->L ==NULL && n-> R ==NULL){
+return 1;
+}
+else {
+return l(n->L)+l(n->R);
+}
+}
+struct n* nn(int a){
+struct n* n=(struct n*)
+malloc(sizeof(struct n));
+n-> a=a;
+n->L=NULL;
+n->R =NULL;
+return (n);
+}
+int h(n* n){
+if (n == NULL)
+return 0;
+else {
+int lheight = h(n->L);
+int rheight = h(n->R);
+if (lheight > rheight)
+return (lheight + 1);
+else
+return (rheight + 1);
+}
+}
+n* nn1(int a)
+{
+n* N = new n();
+N->a= a;
+N->L = NULL;
+N->R = NULL;
+return (N);
+}
+int main(){
+struct n *r=nn(25);
+r->L=nn(20);
+r->R=nn(36);
+r->L->L=nn(10);
+r->L->R=nn(22);
+r->R->L=nn(30);
+r->R->R=nn(40);
+r->L->L->L=nn(5);
+r->L->L->R=nn(12);
+r->R->L->L=nn(28);
+r->R->R->L=nn(38);
+r->R->R->R=nn(48);
+cout<<"Leaf count is "<<l(r)<<endl;
+cout<<"Height is "<<h(r)<<endl;
+return 0;
+}
+Output:
+
+
+
+
+
