@@ -1,0 +1,442 @@
+Questions :
+1. Implement a program to perform the following operations of list using an
+array.
+a) Insertion
+b) Deletion
+c) Search/Traverse
+d) Update/Replace
+
+2. Design the stack application for stack of books (book title, author, pages, year)
+and stack the books one over the other such that the resulting stack has the books
+arranged in the order (LIFO).
+I. Push
+II. Pop
+III. Search
+
+3. Write a program to convert the given infix form of expression to postfix using
+the principle of Stack (Assume own input).
+
+4. Construct and implement the scheduling of jobs to a printer on the basis of
+first in first out (FIFO). Provide options to add a job, cancel a job and display the
+status of jobs (assume own inputs). 
+
+
+
+
+
+
+
+Q1
+Answer
+Code
+#include<iostream>
+using namespace std;
+void insert_function( int arr[10],int *length){
+cout<<"inserting element\n";
+int x;
+cin>>x;
+arr[*length]=x;
+*length=*length+1;
+}
+void deletion_function(int arr[10], int *length){
+cout<<"element which needs to be deleted\n";
+int x;
+cin>>x;
+int i;
+int index;
+for(i=0;i<*length;i++){
+if(x==arr[i]){
+index=i;
+break;
+}
+}
+for(i=index;i<*length-1;i++){
+arr[i]=arr[i+1];
+}
+*length=*length-1;
+}
+void output(int arr[10],int length){
+ int i;
+ for(i=0;i<length;i++){
+ cout<<arr[i]<<" ";
+ }
+ cout<<endl;
+}
+void searchfunction(int arr[10], int length){
+cout<<"element which needs to be searched\n";
+int x;
+cin>>x;
+int i;
+int f=0;
+int index;
+for(i=0;i<length;i++){
+if(x==arr[i]){
+f=1;
+cout<<"value "<<arr[i]<<" found at "<<i<<"\n";
+break;
+}
+}
+if(f==0){
+cout<<"Value not found\n";
+}
+}
+void updatefunction(int arr[10], int length){
+cout<<"element that needs to be replaced\n";
+int index;
+cin>>index;
+cout<<"replacing number\n";
+int k;
+int i;
+cin>>k;
+for(i=0;i<length;i++){
+if(arr[i]==index){
+arr[i]=k;
+}
+}
+}
+int main()
+{
+int length=0;
+int arr[10];
+insert_function(arr,&length);
+insert_function(arr,&length);
+insert_function(arr,&length);
+insert_function(arr,&length);
+ output(arr,length);
+ deletion_function(arr,&length);
+ output(arr,length);
+ updatefunction(arr,length);
+ output(arr,length);
+ searchfunction(arr,length);
+}
+
+
+
+
+
+
+Q2
+Answer:
+Code:
+#include <iostream>
+#include<string.h>
+using namespace std;
+class books{
+public:
+ string name;
+ string author;
+ int pages;
+ int year;
+ void push_function(int *len){
+ cout<<"Enter Name, Author, No. of pages, year of release"<<endl;
+ getline(cin>>ws,name);
+ getline(cin>>ws,author);
+ cin>>pages;
+ cin>>year;
+ *len=*len+1;
+}
+void display(){
+int i;
+cout<<name;
+int l=name.length();
+for(i=l;l<25;l++){
+cout<<" ";
+}
+}
+};
+void pop_function(int *len){
+cout<<"Popped"<<endl;
+ *len=*len-1;
+}
+void search_function(books arr[10],int len){
+ int i;
+ books b1;
+ int g=0;
+ b1.push_function(&g);
+ int f=0;
+ for(i=0;i<len;i++){
+ if(arr[i].pages==b1.pages && arr[i].year==b1.year ){
+ if(arr[i].name==b1.name && arr[i].author==b1.author){
+ cout<<"Book found at "<<i<<" position in the stack";
+ f=1;
+ break;
+}
+}
+}
+if(f==0){
+cout<<"Book not found";
+}
+}
+int main()
+{
+books X[10];
+int len=0;
+int i;
+X[len].push_function(&len);
+X[len].push_function(&len);
+X[len].push_function(&len);
+X[len].push_function(&len);
+for(i=0;i<len;i++){
+X[i].display();
+}
+pop_function(&len);
+for(i=0;i<len;i++){
+X[i].display();
+}
+search_function(X,len);
+}
+:
+
+
+
+Q3.
+Answer:
+Code:
+#include <iostream>
+#include <cctype>
+using namespace std;
+class Stack
+{
+ private:
+ char stack[100];
+ int size = 100;
+ int top = -1;
+ public:
+ void print_function()
+ {
+ for (int i=0; i<=top; i++)
+ cout << stack[i] << ' ';
+ cout << endl;
+ }
+ string inToPostfix(string exp)
+ {
+ string Post = "";
+ for (char chr: exp)
+ {
+ if (isalpha(chr))
+ Post += chr;
+ else if (top == -1 || chr=='(' || chr=='[' || chr=='{' || Display_top()=='(' || Display_top()=='[' ||
+Display_top()=='{')
+ Push_Function(chr);
+ else if (chr==')' || chr==']' || chr=='}')
+ {
+ while (Display_top()!='(' && Display_top()!='[' && Display_top()!='{')
+ Post += Pop_Function();
+ Pop_Function();
+ }
+ else if (chr=='*' || chr=='/')
+ {
+ if (Display_top()=='+' || Display_top()=='-')
+ Push_Function(chr);
+ else if (Display_top()=='*' || Display_top()=='/')
+ {
+ Post += Pop_Function();
+ Push_Function(chr);
+ }
+ }
+ else
+ {
+ if (Display_top()=='+' || Display_top()=='-')
+ {
+ Post += Pop_Function();
+ Push_Function(chr);
+ }
+ else if (Display_top()=='*' || Display_top()=='/')
+ {
+ Post += Pop_Function();
+ if (Display_top()=='+' || Display_top()=='-')
+ Post += Pop_Function();
+ Push_Function(chr);
+ }
+ }
+ }
+ while (top != -1)
+ Post += Pop_Function();
+ return Post;
+ }
+ void Push_Function(char chr)
+ {
+ if (top != size-1)
+ {
+ top++;
+ stack[top] = chr;
+ }
+ else
+ cout << "Overflow" << endl;
+ }
+ char Pop_Function()
+ {
+ char pop;
+ if (top != -1)
+ {
+ pop = stack[top];
+ top--;
+ }
+ else
+ pop = ' ';
+ return pop;
+ }
+ char Display_top()
+ {
+ if (top != -1)
+ return stack[top];
+ return ' ';
+ }
+
+};
+int main()
+{
+ Stack stack;
+ string post1, post2, exp1="a*b+(c-d/e)", exp2="a+b+(d*e+f)*g", exp3="";
+ post1 = stack.inToPostfix(exp1);
+ post2 = stack.inToPostfix(exp2);
+ cout << "Infix = " << exp1 << endl << "Postfix = " << post1 << endl;
+ cout << "Infix = " << exp2 << endl << "Postfix = " << post2 << endl;
+ return 0;
+}
+Output:
+
+
+
+
+Q4.
+Answer:
+Code:
+#include<iostream>
+#include<string>
+using namespace std;
+class job{
+public:
+int val;
+string status;
+void output_function(){
+cout<<val;
+int i;
+ for(i=0;i<3;i++){
+ cout<<" ";
+ }
+ cout<<status<<"\n";
+}
+};
+void outputqueue(job queue[10],int front,int rear){
+if(rear<front){
+int i;
+for(i=front;i<10;i++){
+queue[i].output_function();
+}
+for(i=0;i<=rear;i++){
+queue[i].output_function();
+}
+}
+else if(rear==front){
+queue[front].output_function();
+}
+else{
+int i;
+for(i=front;i<=rear;i++){
+queue[i].output_function();
+}
+}
+}
+void enq(job queue[10],int *front, int *rear){
+if((*front==0 && *rear==9) || (*front==*rear+1)){
+cout<<"Overflow";
+}
+else{
+ cout<<"Enter the number and status \n";
+int k;
+cin>>k;
+string c;
+cin>>c;
+if(*rear==9){
+*rear=0;
+queue[*rear].val=k;
+queue[*rear].status=c;
+}
+else if(*rear==-1 && *front==-1){
+*front=0;
+*rear=0;
+queue[*rear].val=k;
+queue[*rear].status=c;
+}
+else{
+queue[*rear+1].val=k;
+queue[*rear+1].status=c;
+*rear+=1;
+}
+}
+}
+void deq(job queue[10],int *front,int *rear){
+ cout<<"dequed"<<"\n";
+if((*front==*rear && *rear==-1)){
+cout<<"Underflow";
+}
+else if(*front==*rear){
+*front=-1;
+*rear=-1;
+}
+else{
+if(*front==9){
+*front=0;
+}
+else{
+*front=*front+1;
+}
+}
+}
+void search_function(job queue[10],int front,int rear,int x){
+ int f=0;
+if(rear<front){
+int i;
+for(i=front;i<10;i++){
+if(queue[i].val==x){
+cout<<"Job found with status "<<queue[i].status;
+f=1;
+}
+}
+for(i=0;i<=rear;i++){
+if(queue[i].val==x){
+cout<<"Job found with status "<<queue[i].status;
+f=1;
+}
+}
+}
+else if(rear==front){
+if(queue[rear].val==x){
+cout<<"Job found with status "<<queue[rear].status;
+f=1;
+}
+}
+else{
+int i;
+for(i=front;i<=rear;i++){
+ if(queue[i].val==x){
+ cout<<"Job found with status "<<queue[i].status;
+ f=1;
+ }
+}
+}
+if(f==0){
+ cout<<"Job with status not found";
+}
+}
+int main(){
+job queue[10];
+int front=-1;
+int rear=-1;
+enq(queue,&front,&rear);
+enq(queue,&front,&rear);
+enq(queue,&front,&rear);
+enq(queue,&front,&rear);
+cout<<"\n";
+outputqueue(queue,front,rear);
+cout<<"\n";
+deq(queue,&front,&rear);
+cout<<"\n";
+outputqueue(queue,front,rear);
+cout<<"\n";
+int x;
+cout<<"Enter the number to be searched for \n";
+cin>>x;
+search_function(queue,front,rear,x);
+}
