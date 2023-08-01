@@ -1,0 +1,977 @@
+Compiler Design Lab Experiment 1
+Name: Surindernath Sivakumar
+Reg No: 21BCE3474
+Question 1:
+1. Write a C/ CPP code to identify the following
+i. the given line is a comment line or not
+Code 1:
+#include <iostream>
+#include <string>
+using namespace std;
+bool isComment(string input) {
+ if (input.length() < 2)
+ return false;
+ if (input[0] == '/' && input[1] == '/')
+ return true;
+ return false;
+}
+int main() {
+ string input;
+ getline(cin, input);
+ cout<<"This Code Has Been Sucessfully Excecuted By Surindernath Sivakumar 21BCE3474\n";
+ if (isComment(input))
+ cout << "The Input Is A Comment\n";
+ else
+ cout << "The Input Is Not A Comment\n";
+ return 0;
+
+
+}
+Output 1:
+Question 2:
+ii. Check whether the given input is an identifier, keyword, operator, symbol, constant or literal
+Code 2:
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+int is_keyword(char* input) {
+ char keywords[32][10] = {"break", "char", "const", "double", "else", "float", "for", "if", "int",
+"return", "short", "sizeof", "struct", "switch","void", "while"};
+ for (int i = 0; i < 32; i++) {
+ if (strcmp(keywords[i], input) == 0) {
+ return 1;
+ }
+ }
+ return 0;
+}
+int is_identifier(char* input) {
+ if (!isalpha(input[0])) {
+ return 0;
+ }
+ for (int i = 1; i < strlen(input); i++) {
+ if (!isalnum(input[i]) && input[i] != '_') {
+ return 0;
+ }
+ }
+ return 1;
+}
+int is_constant(char* input) {
+ for (int i = 0; i < strlen(input); i++) {
+ if (!isdigit(input[i])) {
+ return 0;
+ }
+ }
+ return 1;
+}
+int is_literal(char* input) {
+ if ((input[0] == '"' && input[strlen(input)-1] == '"') || (input[0] == '\'' && input[strlen(input)-1]
+== '\'')) {
+ return 1;
+ }
+ return 0;
+}
+int is_operator(char* input) {
+ char operators[13][4] = {"+", "-", "*", "/", "%", "=", "==", ">", "<", ">=", "<=", "&&", "||"};
+ for (int i = 0; i < 13; i++) {
+ if (strcmp(operators[i], input) == 0) {
+ return 1;
+ }
+ }
+ return 0;
+}
+int is_symbol(char* input) {
+ char symbols[16][3] = {"(", ")", "{", "}", "[", "]", ",", ";", ".", "->", "++", "--", "&", "*", "?"};
+ for (int i = 0; i < 16; i++) {
+ if (strcmp(symbols[i], input) == 0) {
+ return 1;
+ }
+ }
+ return 0;
+}
+int main() {
+ char input[100];
+ printf("Enter input: ");
+ scanf("%s", input);
+ if (is_keyword(input)) {
+ printf("Keyword\n");
+ } else if (is_identifier(input)) {
+ printf("Identifier\n");
+ } else if (is_constant(input)) {
+ printf("Constant\n");
+ } else if (is_literal(input)) {
+ printf("Literal\n");
+ } else if (is_operator(input)) {
+ printf("Operator\n");
+ } else if (is_symbol(input)) {
+ printf("Symbol\n");
+ } else {
+ printf("Invalid input\n");
+ }
+ printf("This code has been Sucessfully run and Excecuted by Surindernath Sivakumar
+21BCE3474\n");
+ return 0;
+}
+Output 2:
+Question 3:
+c. Input: Perfect C Program;;;;; Output: count the total number of identifiers, keywords, operators,
+symbols, constants, or literals without any repetition.
+Code 3:
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX_LENGTH 100
+int isIdentifier(char *token) {
+ if (!isalpha(token[0]) && token[0] != '_')
+ return 0;
+ int i = 1;
+ while (token[i] != '\0') {
+ if (!isalnum(token[i]) && token[i] != '_')
+ return 0;
+ i++;
+ }
+ return 1;
+}
+int isKeyword(char *token) {
+ const char *keywords[] = {"auto", "break", "case", "char", "const", "continue", "default", "do",
+ "double", "else", "enum", "extern", "float", "for", "goto", "if",
+ "int", "long", "register", "return", "short", "signed", "sizeof", "static",
+ "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while"};
+ int numKeywords = sizeof(keywords) / sizeof(keywords[0]);
+ int i;
+ for (i = 0; i < numKeywords; i++) {
+ if (strcmp(token, keywords[i]) == 0)
+ return 1;
+ }
+ return 0;
+}
+int isOperator(char c) {
+ const char operators[] = "+-*/%=";
+ int numOperators = sizeof(operators) - 1;
+ int i;
+ for (i = 0; i < numOperators; i++) {
+ if (c == operators[i])
+ return 1;
+ }
+ return 0;
+}
+int isSymbol(char c) {
+
+ const char symbols[] = "(){}[],;.";
+ int numSymbols = sizeof(symbols) - 1;
+ int i;
+ for (i = 0; i < numSymbols; i++) {
+ if (c == symbols[i])
+ return 1;
+ }
+ return 0;
+}
+int main() {
+ char line[MAX_LENGTH];
+ char *tokens[MAX_LENGTH];
+ int numTokens = 0;
+ int numIdentifiers = 0;
+ int numKeywords = 0;
+ int numOperators = 0;
+ int numSymbols = 0;
+ int numConstants = 0;
+ printf("Enter a line of code: ");
+ fgets(line, sizeof(line), stdin);
+
+ char *token = strtok(line, " \t\n;");
+ while (token != NULL) {
+ tokens[numTokens++] = token;
+ token = strtok(NULL, " \t\n;");
+ }
+ int i;
+ for (i = 0; i < numTokens; i++) {
+ token = tokens[i];
+ if (isIdentifier(token)) {
+ numIdentifiers++;
+ } else if (isKeyword(token)) {
+ numKeywords++;
+ } else if (strlen(token) == 1 && isOperator(token[0])) {
+ numOperators++;
+ } else if (strlen(token) == 1 && isSymbol(token[0])) {
+ numSymbols++;
+ } else {
+ numConstants++;
+ }
+ }
+ int totalCount = numIdentifiers + numKeywords + numOperators + numSymbols +
+numConstants;
+ printf("Total number of identifiers: %d\n", numIdentifiers);
+ printf("Total number of keywords: %d\n", numKeywords);
+ printf("Total number of operators: %d\n", numOperators);
+ printf("Total number of symbols: %d\n", numSymbols);
+ printf("Total number of constants or literals: %d\n", numConstants);
+ printf("Total count without repetition: %d\n", totalCount);
+ return 0;
+}
+Output 3:
+Question 4:]
+2. Accepts the string with 'a*', 'a*b+' only.
+Code 4:
+#include <iostream>
+#include <string>
+bool validatePattern(const std::string& input) {
+ bool hasA = false;
+ bool hasB = false;
+ bool asterisk = false;
+ bool plus = false;
+ for (char c : input) {
+ if (c == 'a') {
+ hasA = true;
+ } else if (c == 'b') {
+ hasB = true;
+ } else if (c == '*') {
+ asterisk = true;
+ } else if (c == '+') {
+ plus = true;
+ } else {
+ return false;
+ }
+ }
+ if (hasA && !hasB && asterisk) {
+ return true;
+ }
+ if (hasA && hasB && plus) {
+ size_t posA = input.find('a');
+ size_t posB = input.find('b');
+ if (posA != std::string::npos && posB != std::string::npos && posA < posB) {
+ return true;
+ }
+ }
+ return 0;
+}
+int main() {
+ std::string input;
+ std::cout << "Enter the string: ";
+ std::getline(std::cin, input);
+ if (input.empty()) {
+ std::cout << "Invalid" << std::endl;
+ } else if (validatePattern(input)) {
+ std::cout << "Valid" << std::endl;
+ } else {
+ std::cout << "Invalid" << std::endl;
+ }
+ std::cout<<"This code has been sucessfully excecuted by Surindernath Sivakumar 21BCE3474";
+ return 0;
+}
+Output 4:
+\
+Question 3:
+Write a C program to recognize the following binary string 0*, 0+, 0*1+, 0*101
+Code 3:
+#include <stdio.h>
+#include <string.h>
+int isBinaryString(const char *str) {
+ int length = strlen(str);
+ if (length == 0)
+ return 0;
+ int i = 0;
+ if (str[i] == '0') {
+ i++;
+ if (str[i] == '*') {
+ i++;
+ if (i == length)
+ return 1;
+ else
+ return 0;
+ }
+ else if (str[i] == '+') {
+ i++;
+ if (i == length)
+ return 1;
+ else
+ return 0;
+ }
+ else if (str[i] == '1') {
+ i++;
+ if (str[i] == '+') {
+ i++;
+ if (i == length)
+ return 1;
+ else
+ return 0;
+ }
+ else if (str[i] == '0' || str[i] == '1') {
+ i++;
+ if (i == length)
+ return 1;
+ else
+ return 0;
+ }
+ else if (i == length)
+ return 1;
+ else
+ return 0;
+ }
+ else if (str[i] == '0' || str[i] == '1') {
+ i++;
+ if (i == length)
+ return 1;
+ else
+ return 0;
+ }
+ }
+ return 0;
+}
+int main() {
+ char str[100];
+ printf("Enter a binary string: ");
+ fgets(str, sizeof(str), stdin);
+ str[strcspn(str, "\n")] = '\0';
+ if (isBinaryString(str))
+ printf("Accepted\n", str);
+ else
+ printf("rejected\n", str);
+printf("This code has been run and excecuted by Surindernath Sivakumar 21BCE3474\n",
+str);
+ return 0;
+}
+Output 3:
+Question 4:
+Write a C program to create a Symbol table. Input: Perfect C pgm. Output: Symbol Table with
+Symbol | Address | Type
+Code 4:
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX_SYMBOLS 100
+#define MAX_LENGTH 100
+typedef struct {
+ char symbol[MAX_LENGTH];
+ int address;
+ char type[MAX_LENGTH];
+} SymbolEntry;
+SymbolEntry symbolTable[MAX_SYMBOLS];
+int numSymbols = 0;
+int isKeyword(const char *token) {
+ // List of keywords
+ const char *keywords[] = {
+ "auto", "break", "case", "char", "const", "continue", "default",
+ "do", "double", "else", "enum", "extern", "float", "for", "goto",
+ "if", "int", "long", "register", "return", "short", "signed",
+ "sizeof", "static", "struct", "switch", "typedef", "union",
+ "unsigned", "void", "volatile", "while"
+ };
+ int numKeywords = sizeof(keywords) / sizeof(keywords[0]);
+ int i;
+ for (i = 0; i < numKeywords; i++) {
+ if (strcmp(token, keywords[i]) == 0)
+ return 1;
+ }
+ return 0;
+}
+int isIdentifier(const char *token) {
+ if (!isalpha(token[0]) && token[0] != '_')
+ return 0;
+ int i = 1;
+ while (token[i] != '\0') {
+ if (!isalnum(token[i]) && token[i] != '_')
+ return 0;
+ i++;
+ }
+ return 1;
+}
+void addToSymbolTable(const char *symbol, int address, const char *type) {
+ SymbolEntry entry;
+ strcpy(entry.symbol, symbol);
+ entry.address = address;
+ strcpy(entry.type, type);
+ symbolTable[numSymbols++] = entry;
+}
+void printSymbolTable() {
+ int i;
+ printf("Symbol Table\n");
+ printf("------------\n");
+ printf("Symbol | Address | Type\n");
+ printf("---------------------\n");
+ for (i = 0; i < numSymbols; i++) {
+ printf("%-6s | %-7d | %s\n", symbolTable[i].symbol, symbolTable[i].address,
+symbolTable[i].type);
+ }
+}
+int main() {
+ FILE *file;
+ char filename[MAX_LENGTH];
+ char line[MAX_LENGTH];
+ int address = 0;
+ printf("Enter the name of the C program file: ");
+ scanf("%s", filename);
+ file = fopen(filename, "r");
+ if (file == NULL) {
+ printf("Error opening file.\n");
+ return 1;
+ }
+ while (fgets(line, sizeof(line), file) != NULL) {
+ char *token = strtok(line, " \t\n");
+ while (token != NULL) {
+ if (isIdentifier(token) && !isKeyword(token))
+ addToSymbolTable(token, address, "identifier");
+ token = strtok(NULL, " \t\n");
+ }
+ address++;
+ }
+ fclose(file);
+ printSymbolTable();
+ return 0;
+}
+Output 4:
+
+
+
+
+Question 2:
+Write a C Program to create a LL(1) table and find the FIRST and Follow for the grammar. (Note: you can
+take the grammar which we have discussed in the class E -> E+T | T …..)
+Answer 2:
+Code:
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX_RULES 10
+#define MAX_SYMBOLS 10
+#define MAX_TERMINALS 10
+#define MAX_NON_TERMINALS 10
+int n_rules, n_terminals, n_non_terminals;
+char rules[MAX_RULES][MAX_SYMBOLS];
+char terminals[MAX_TERMINALS];
+char non_terminals[MAX_NON_TERMINALS];
+char first[MAX_NON_TERMINALS][MAX_TERMINALS];
+char follow[MAX_NON_TERMINALS][MAX_TERMINALS];
+char table[MAX_NON_TERMINALS][MAX_TERMINALS][MAX_RULES];
+void compute_first(int i)
+{
+ int j, k;
+ char symbol;
+ for(j = 0; j < strlen(rules[i]); j++)
+ {
+ symbol = rules[i][j];
+ if(isupper(symbol))
+ {
+ for(k = 0; k < n_rules; k++)
+ {
+ if(rules[k][0] == symbol)
+ {
+ compute_first(k);
+ strcat(first[i], first[k]);
+ }
+ }
+ }
+ else
+ {
+ char temp[2] = {symbol, '\0'};
+ strcat(first[i], temp);
+ break;
+ }
+ }
+}
+void compute_follow(int i)
+{
+ int j, k;
+ char symbol;
+ for(j = 0; j < n_rules; j++)
+ {
+ for(k = 0; k < strlen(rules[j]); k++)
+ {
+ if(rules[j][k] == non_terminals[i])
+ {
+ if(k == strlen(rules[j]) - 1)
+ {
+ if(j != i)
+ {
+ compute_follow(j);
+ strcat(follow[i], follow[j]);
+ }
+ }
+ else
+ {
+ int l;
+ for(l = k + 1; l < strlen(rules[j]); l++)
+ {
+ if(isupper(rules[j][l]))
+ {
+ strcat(follow[i], first[rules[j][l] - 'A']);
+ if(!strstr(first[rules[j][l] - 'A'], "e"))
+ break;
+ }
+ else
+ {
+ char temp[2] = {rules[j][l], '\0'};
+ strcat(follow[i], temp);
+ break;
+ }
+ }
+ if(l == strlen(rules[j]))
+ {
+ if(j != i)
+ {
+ compute_follow(j);
+ strcat(follow[i], follow[j]);
+ }
+ }
+ }
+ }
+ }
+ }
+}
+void create_table()
+{
+ int i, j, k, l;
+ for(i = 0; i < n_rules; i++)
+ {
+ char temp[MAX_TERMINALS] = "";
+ for(j = 0; j < strlen(rules[i]); j++)
+ {
+ if(isupper(rules[i][j]))
+ {
+ strcat(temp, first[rules[i][j] - 'A']);
+ if(!strstr(first[rules[i][j] - 'A'], "e"))
+ break;
+ }
+ else
+ {
+ char temp2[2] = {rules[i][j], '\0'};
+ strcat(temp, temp2);
+ break;
+ }
+ }
+ if(strstr(temp, "e"))
+ strcat(temp, follow[rules[i][0] - 'A']);
+ for(k = 0; k < strlen(temp); k++)
+ {
+ for(l = 0; l < n_terminals; l++)
+ {
+ if(terminals[l] == temp[k])
+ {
+ table[rules[i][0] - 'A'][l][0] = i + '0';
+ break;
+ }
+ }
+ }
+ }
+}
+void display_table()
+{
+ int i, j;
+ printf("LL(1) Parsing Table:\n");
+ printf(" ");
+ for(i = 0; i < n_terminals; i++)
+ printf("| %c ", terminals[i]);
+ printf("|\n");
+ for(i = 0; i < n_non_terminals; i++)
+ {
+ printf(" %c ", non_terminals[i]);
+ for(j = 0; j < n_terminals; j++)
+ {
+ printf("| %c ", table[i][j][0]);
+ }
+ printf("|\n");
+ }
+}
+int main()
+{
+ int i, j;
+ printf("Enter the number of rules: ");
+ scanf("%d", &n_rules);
+ printf("Enter the rules:\n");
+ for(i = 0; i < n_rules; i++)
+ {
+ scanf("%s", rules[i]);
+ }
+ for(i = 0; i < n_rules; i++)
+ {
+ if(!isupper(rules[i][0]))
+ {
+ printf("Error: Invalid rule format\n");
+ exit(0);
+ }
+ if(strchr(non_terminals, rules[i][0]) == NULL)
+ {
+ char temp[2] = {rules[i][0], '\0'};
+ strcat(non_terminals, temp);
+ }
+ for(j = 1; j < strlen(rules[i]); j++)
+ {
+ if(!isalpha(rules[i][j]))
+ {
+ printf("Error: Invalid rule format\n");
+ exit(0);
+ }
+ if(isupper(rules[i][j]) && strchr(non_terminals, rules[i][j]) == NULL)
+ {
+ char temp[2] = {rules[i][j], '\0'};
+ strcat(non_terminals, temp);
+ }
+ else if(islower(rules[i][j]) && strchr(terminals, rules[i][j]) == NULL)
+ {
+ char temp[2] = {rules[i][j], '\0'};
+ strcat(terminals, temp);
+ }
+ }
+ }
+ n_non_terminals = strlen(non_terminals);
+ n_terminals = strlen(terminals);
+ for(i = 0; i < n_non_terminals; i++)
+ {
+ compute_first(i);
+ }
+ for(i = 0; i < n_non_terminals; i++)
+ {
+ char temp[2] = {'$', '\0'};
+ if(i == 0)
+ strcat(follow[i], temp);
+ compute_follow(i);
+ }
+ create_table();
+ display_table();
+ return 0;
+}
+Output Screenshot:
+Question 3:
+For the given grammar E -> E +E | E*E | E/E | E-E | a | b | id Construct the operator precedence table
+using C program and parse the string id*id+id.
+Answer 3:
+Code:
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX_SYMBOLS 10
+#define MAX_OPERATORS 5
+#define MAX_PRECEDENCE 3
+char symbols[MAX_SYMBOLS];
+char operators[MAX_OPERATORS];
+int precedence[MAX_OPERATORS][MAX_OPERATORS];
+char table[MAX_SYMBOLS][MAX_SYMBOLS];
+void initialize_operators()
+{
+ operators[0] = '+';
+ operators[1] = '-';
+ operators[2] = '*';
+ operators[3] = '/';
+ operators[4] = '^';
+}
+int is_operator(char symbol)
+{
+ int i;
+ for(i = 0; i < MAX_OPERATORS; i++)
+ {
+ if(symbol == operators[i])
+ return 1;
+ }
+ return 0;
+}
+int get_operator_index(char symbol)
+{
+ int i;
+ for(i = 0; i < MAX_OPERATORS; i++)
+ {
+ if(symbol == operators[i])
+ return i;
+ }
+ return -1;
+}
+void initialize_precedence()
+{
+ int i, j;
+ for(i = 0; i < MAX_OPERATORS; i++)
+ {
+ for(j = 0; j < MAX_OPERATORS; j++)
+ {
+ precedence[i][j] = 0;
+ }
+ }
+ precedence[0][0] = 0;
+ precedence[0][1] = 0;
+ precedence[0][2] = 1;
+ precedence[0][3] = 1;
+ precedence[0][4] = 1;
+ precedence[1][0] = 0;
+ precedence[1][1] = 0;
+ precedence[1][2] = 1;
+ precedence[1][3] = 1;
+ precedence[1][4] = 1;
+ precedence[2][0] = -1;
+ precedence[2][1] = -1;
+ precedence[2][2] = 0;
+ precedence[2][3] = 0;
+ precedence[2][4] = 1;
+ precedence[3][0] = -1;
+ precedence[3][1] = -1;
+ precedence[3][2] = 0;
+ precedence[3][3] = 0;
+ precedence[3][4] = 1;
+ precedence[4][0] = -1;
+ precedence[4][1] = -1;
+ precedence[4][2] = -1;
+ precedence[4][3] = -1;
+ precedence[4][4] = 0;
+}
+void create_table()
+{
+ int i, j, k;
+ for(i = 0; i < MAX_SYMBOLS; i++)
+ {
+ for(j = 0; j < MAX_SYMBOLS; j++)
+ {
+ table[i][j] = ' ';
+ }
+ }
+ for(i = 0; i < MAX_SYMBOLS; i++)
+ {
+ if(is_operator(symbols[i]))
+ {
+ for(j = 0; j < MAX_SYMBOLS; j++)
+ {
+ if(is_operator(symbols[j]))
+ {
+ int p = precedence[get_operator_index(symbols[i])][get_operator_index(symbols[j])];
+ if(p == -1)
+ table[i][j] = '<';
+ else if(p == 0)
+ table[i][j] = '=';
+ else if(p == 1)
+ table[i][j] = '>';
+ }
+ }
+ }
+ }
+}
+void display_table()
+{
+ int i, j;
+ printf("Operator Precedence Table:\n");
+ printf(" ");
+ for(i = 0; i < strlen(symbols); i++)
+ printf("| %c ", symbols[i]);
+ printf("|\n");
+ for(i = 0; i < strlen(symbols); i++)
+ {
+ printf(" %c ", symbols[i]);
+ for(j = 0; j < strlen(symbols); j++)
+ {
+ printf("| %c ", table[i][j]);
+ }
+ printf("|\n");
+ }
+}
+int parse_string(char* input)
+{
+ char stack[MAX_SYMBOLS];
+ int top = -1;
+ int i = 0;
+ stack[++top] = '$';
+ while(i < strlen(input))
+ {
+ if(input[i] == '$' && stack[top] == '$')
+ return 1;
+ if(is_operator(stack[top]) && table[get_operator_index(stack[top])][get_operator_index(input[i])]
+== '<')
+ {
+ stack[++top] = input[i];
+ i++;
+ }
+ else if(is_operator(stack[top]) &&
+table[get_operator_index(stack[top])][get_operator_index(input[i])] == '>')
+ {
+ char op = stack[top--];
+ char operand1 = stack[top--];
+ char operand2 = input[i++];
+ char temp[4];
+ sprintf(temp, "(%c %c %c)", operand1, op, operand2);
+ stack[++top] = 'T';
+ }
+ else if(table[get_operator_index(stack[top])][get_operator_index(input[i])] == '=')
+ {
+ if(stack[top] == '(' && input[i] == ')')
+ {
+ top--;
+ i++;
+ }
+ else
+ {
+ stack[++top] = input[i];
+ i++;
+ }
+ }
+ else
+ {
+ stack[++top] = input[i];
+ i++;
+ }
+ }
+ return 0;
+}
+int main()
+{
+ strcpy(symbols, "+-*/^()id");
+ initialize_operators();
+ initialize_precedence();
+ create_table();
+ display_table();
+ char input[] = "id*id+id$";
+ int result = parse_string(input);
+ if(result == 1)
+ printf("String parsed successfully!\n");
+ else
+ printf("Error parsing string.\n");
+ return 0;
+}
+Output Screenshot:
+
+
+Question 2:
+2. Write a C Program to create a 3 address code for given expression.
+Code:
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX_EXPR_LEN 100
+int label_count = 0;
+char *new_label() {
+ char *label = calloc(10, sizeof(char));
+ sprintf(label, "t%d", label_count++);
+ return label;
+}
+void generate_code(char *expr) {
+ char *tokens[MAX_EXPR_LEN];
+ int num_tokens = 0;
+ char *token = strtok(expr, "+-*");
+ while (token) {
+ tokens[num_tokens++] = token;
+ token = strtok(NULL, "+-*");
+ }
+
+ char *result = new_label();
+ printf("%s = %s\n", result, tokens[0]);
+ for (int i = 1; i < num_tokens; i += 2) {
+ char *op = tokens[i];
+ char *arg = tokens[i+1];
+ char *temp = new_label();
+ printf("%s = %s %s %s\n", temp, result, op, arg);
+ result = temp;
+ }
+}
+int main() {
+ char expr1[MAX_EXPR_LEN] = "a = b * -c + b * -c";
+ char expr2[MAX_EXPR_LEN] = "a = b * -3474 + b * -3474";
+ char *result1 = new_label();
+ char *result2 = new_label();
+ printf("%s = %s\n", result1, "b");
+ printf("%s = %s %s %s\n", result2, result1, "*", "-c");
+ printf("%s = %s %s %s\n", result1, result2, "+", result2);
+ printf("%s = %s %s %s\n", result2, result1, "*", "-c");
+ printf("%s = %s %s %s\n", result1, result1, "+", result2);
+ printf("%s = %s\n", "a", result1);
+ printf("\n");
+ printf("%s = %s\n", result1, "b");
+ printf("%s = %s %s %s\n", result2, result1, "*", "-3474");
+ printf("%s = %s %s %s\n", result1, result2, "+", result2);
+ printf("%s = %s %s %s\n", result2, result1, "*", "-3474");
+ printf("%s = %s %s %s\n", result1, result1, "+", result2);
+ printf("%s = %s\n", "a", result1);
+ printf("This code was brought to you by Surindernath Sivakumar 21BCE3474");
+ free(result1);
+ free(result2);
+ return 0;
+}
+Output:
+
+Question 3:
+Consider the grammar
+S –> S + S
+S –> S * S
+S –> id
+Perform Shift Reduce parsing using the C program for the input string “id + id + id”.
+Code:
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#define MAX_STACK 50
+#define MAX_INPUT 50
+char stack[MAX_STACK];
+int top = -1;
+void push(char c) {
+if (top == MAX_STACK - 1) {
+printf("Error: Stack overflow\n");
+return;
+}
+stack[++top] = c;
+}
+char pop() {
+if (top == -1) {
+printf("Error: Stack underflow\n");
+return '\0';
+}
+return stack[top--];
+}
+char peek() {
+if (top == -1) {
+printf("Error: Stack empty\n");
+return '\0';
+}
+return stack[top];
+}
+void print_stack() {
+for (int i = top; i >= 0; i--) {
+printf("%c ", stack[i]);
+}
+printf("\n");
+}
+int is_terminal(char c) {
+return islower(c) || isdigit(c);
+}
+void reduce() {
+char A, B, C;
+while (top >= 2 && !is_terminal(stack[top]) && !is_terminal(stack[top-1]) &&
+!is_terminal(stack[top-2])) {
+A = pop();
+B = pop();
+C = pop();
+if (C == '(' && B == 'S' && A == ')') {
+push('S');
+} else if (C == 'S' && B == '+' && A == 'S') {
+push('S');
+} else if (C == 'S' && B == '*' && A == 'S') {
+push('S');
+} else {
+printf("Error: Invalid input\n");
+return;
+}
+}
+}
+void shift(char c) {
+push(c);
+reduce();
+}
+void parse(char *input) {
+int len = strlen(input);
+int i = 0;
+stylus
+Copy
+push('$');
+push('S');
+print_stack();
+while (i < len) {
+ shift(input[i++]);
+ print_stack();
+}
+reduce();
+if (top == 0 && stack[top] == 'S') {
+ printf("Accepted\n");
+} else {
+ printf("Error: Invalid input\n");
+}
+}
+int main() {
+char input[MAX_INPUT] = "id+id*id";
+parse(input);
+printf("This Code has been brought to you by Surindernath Sivakumar 21BCE3474");
+Copy
+return 0;
+}
+give sample output for the code
+Output:
