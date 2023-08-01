@@ -1,0 +1,505 @@
+DSA LAB EXPERIMENT 2
+SURINDERNATH SIVAKUMAR 21BCE3474
+1. In linked list implementation of a queue, the recent inserted node is always pointed by
+'rear' and the first node is always pointed by 'front'. Implement the queue using linked list
+to perform the following for patient admission system in the hospital.
+a) Insertion
+b) Deletion
+c) Search/Traverse
+d) Update/Replace
+Code:
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+class number{
+public:
+int n;
+number *p;
+};
+number* getnode(){
+number* newnode;
+newnode=(number*)malloc(sizeof(number));
+int d;
+cin>>d;
+newnode->n=d;
+newnode->p=NULL;
+return newnode;
+}
+class LinkList{
+public:
+number* start=NULL;
+number *end=NULL;
+int c;
+void addnode(){
+cout<<"enter the number ID \n";
+number* newn=getnode();
+if(start==NULL){
+cout<<" new list\n";
+start=newn;
+c+=1;
+}
+else{
+number* temp=start;
+while(temp->p!=NULL){
+temp=temp->p;
+}
+temp->p=newn;
+end=newn;
+c+=1;
+}
+}
+void search(){
+int i;
+int z;
+cout<<"enter the number\n";
+cin>>z;
+number* temp=start;
+int f=0;
+for(i=0;i<c;i++){
+if(temp->n==z){
+cout<<"number found at: "<<i<<"\n";
+f=1;
+break;
+}
+temp=temp->p;
+}
+if(f==0){
+cout<<"Number ID not found\n";
+}
+cout<<"\n";
+}
+void swap(){
+cout<<"replace \n";
+output();
+int z,y;
+cout<<"number to be replaced: \n";
+cin>>z;
+cin>>y;
+int i;
+number* temp=start;
+int f=0;
+for(i=0;i<c;i++){
+if(temp->n==z){
+temp->n=y;
+f=1;
+break;
+}
+temp=temp->p;
+}
+if(f==0){
+cout<<"not found";
+}
+cout<<"\n";
+output();
+}
+void output(){
+number* temp=start;
+int i;
+cout<<"| ";
+for(i=0;i<c-1;i++){
+cout<<temp->n<<"->";
+temp=temp->p;
+}
+cout<<temp->n<<" |\n";
+temp=temp->p;
+cout<<"\n";
+}
+void Del(){
+number* temp=start;
+if(temp==NULL){
+cout<<"List is empty\n";
+}
+else{
+start=temp->p;
+free(temp);
+c-=1;
+cout<<"Deleted\n";
+}
+output();
+}
+};
+int main(){
+LinkList L1;
+int i;
+for(i=0;i<5;i++){
+L1.addnode();
+}
+L1.output();
+L1.Del();
+L1.search();
+L1.swap();
+}
+
+
+
+
+
+
+2. Design the liner search and binary search(Choice based) for the student details which
+contains student reg.no and attendance percentage. Display the corresponding attendance
+percentage if the searching student reg.no is found
+Code:
+Output:
+#include<iostream>
+#include<cstdlib>
+#include<string.h>
+using namespace std;
+class Student{
+public:
+string regNo;
+int perc;
+void getStud(){
+cout<<"Enter regno and attendance\n";
+cin>>regNo;
+cin>>perc;
+}
+void display(){
+cout<<regNo<<" "<<perc<<"\n";
+}
+};
+void BinarySearch(Student s[],int c,string reg){
+cout<<"Binary \n";
+int i;
+for(i=0;i<c;i++){
+int j;
+for(j=0;j<i;j++){
+int k=(s[j].regNo).compare(s[i].regNo);
+if(k>0){
+Student temp;
+temp.regNo=s[i].regNo;
+temp.perc=s[i].perc;
+s[i].regNo=s[j].regNo;
+s[i].perc=s[j].perc;
+s[j].regNo=temp.regNo;
+s[j].perc=temp.perc;
+}
+}
+}
+cout<<"Sorted\n";
+cout<<"\n";
+for(i=0;i<c;i++){
+s[i].display();
+}
+cout<<"\n";
+int mid=(c-1)/2;
+int f=0;
+while(f==0){
+if(s[mid].regNo==reg){
+cout<<"Student found at position "<<mid<<" with attendance "<<s[mid].perc<<"\n";
+f=1;
+break;
+}
+else if((s[mid].regNo).compare(reg)>0){
+mid=(0+mid)/2;
+}
+else if((s[mid].regNo).compare(reg)<0){
+mid=((mid+1)+(c-1))/2;
+}
+if((mid<0 && f==0) || (mid>c && f==0)){
+cout<<"Student not found\n";
+f=1;
+break;
+}
+}
+cout<<"\n";
+}
+void linearSearch(Student s[],int c,string reg){
+cout<<"Linear \n";
+int i;
+int f=0;
+for(i=0;i<c;i++){
+if(s[i].regNo==reg){
+cout<<"Student found "<<s[i].perc<<"\n";
+f=1;
+break;
+}
+}
+if(f==0){
+cout<<"Student not found\n";
+}
+cout<<"\n";
+}
+int main(){
+int i;
+int n;
+cin>>n;
+Student s[n];
+for(i=0;i<n;i++){
+s[i].getStud();
+}
+cout<<"\n";
+for(i=0;i<n;i++){
+s[i].display();
+}
+cout<<"\n";
+int ch;
+cout<<"Enter your choice \n1.Linear search \n2.Binary Search\n";
+cin>>ch;
+if(ch==1){
+string reg;
+cout<<"Enter the string \n";
+cin>>reg;
+linearSearch(s,n,reg);
+}
+else if(ch==2){
+string reg;
+cout<<"Enter the string \n";
+cin>>reg;
+BinarySearch(s,n,reg);
+}
+}
+
+
+
+3. Construct the priority queue with your own assumed priorities to get the book access in
+the library in case of faculty, student, scholars and visitors are inputs.
+Code:
+#include<iostream>
+#include<cstdlib>
+#include<string.h>
+using namespace std;
+class book{
+public:
+string name;
+int prior;
+string priority[4]={"visitor","scholar","student","faculty"};
+void getbook(){
+getline(cin,name);
+string priori;
+getline(cin,priori);
+int i;
+for(i=0;i<4;i++){
+if(priori==priority[i]){
+prior=i;
+}
+}
+cout<<"\n";
+}
+};
+class queuep{
+public:
+string priorit[4]={"visitor","scholar","student","faculty"};
+book b[10];
+int c=0;
+void enqueue(){
+if(c==0){
+b[0].getbook();
+c+=1;
+}
+else{
+int i;
+book b1;
+b1.getbook();
+for(i=0;i<c;i++){
+if(b1.prior>b[i].prior){
+int j=i+1;
+book b2;
+b2.name=b[i].name;
+b2.prior=b[i].prior;
+b[i].name=b1.name;
+b[i].prior=b1.prior;
+c+=1;
+while(j<c){
+b[j].name=b2.name;
+b[j].prior=b2.prior;
+b2.name=b[j+1].name;
+b2.prior=b[j+1].prior;
+j+=1;
+}
+break;
+}
+else if(i==(c-1)){
+b[i+1].name=b1.name;
+b[i+1].prior=b1.prior;
+c+=1;
+break;
+}
+}
+}
+}
+void dequeue(){
+cout<<"Dequeing......\n";
+int i;
+book b2;
+for(i=0;i<c;i++){
+b[i].name=b[i+1].name;
+b[i].prior=b[i+1].prior;
+}
+c--;
+}
+void display(){
+int i;
+cout<<"\n";
+for(i=0;i<28;i++){
+cout<<"-";
+}
+cout<<"\n";
+for(i=0;i<c;i++){
+int k=b[i].prior;
+cout<<b[i].name;
+int x=(b[i].name).length();
+for(int j=x;j<15;j++){
+cout<<" ";
+}
+cout<<"|";
+for(int j=0;j<5;j++){
+cout<<" ";
+}
+cout<<priorit[k];
+cout<<"\n";
+}
+for(i=0;i<28;i++){
+cout<<"-";
+}
+cout<<"\n";
+}
+};
+int main(){
+queuep q;
+q.enqueue();
+q.display();
+q.enqueue();
+q.display();
+q.enqueue();
+q.display();
+q.enqueue();
+q.display();
+q.dequeue();
+q.display();
+}
+
+
+
+
+
+4. Implement the stack operations using linked list to prove LIFO principle.
+Code:
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+class Num{
+public:
+int num;
+Num *p;
+};
+Num* getnode(){
+Num* newnode;
+newnode=(Num*)malloc(sizeof(Num));
+int d;
+cin>>d;
+newnode->num=d;
+newnode->p=NULL;
+return newnode;
+}
+class LinkList{
+public:
+Num* start=NULL;
+Num *end=NULL;
+int c;
+void addnode(){
+cout<<"Enter the number to be inserted\n";
+Num* newn=getnode();
+if(start==NULL){
+cout<<"New stack created\n";
+start=newn;
+c+=1;
+}
+else{
+Num* temp=start;
+while(temp->p!=NULL){
+temp=temp->p;
+}
+temp->p=newn;
+end=newn;
+c+=1;
+}
+}
+void display(){
+Num* temp=start;
+int i;
+cout<<"| ";
+for(i=0;i<c-1;i++){
+cout<<temp->num<<"-> ";
+temp=temp->p;
+}
+cout<<temp->num<<" |\n";
+temp=temp->p;
+cout<<"\n";
+}
+void replace(){
+cout<<"Replacement....\n";
+display();
+int a,b;
+cout<<"Enter the number replaced and the number it's replaced with\n";
+cin>>a;
+cin>>b;
+int i;
+Num* temp=start;
+int f=0;
+for(i=0;i<c;i++){
+if(temp->num==a){
+temp->num=b;
+f=1;
+break;
+}
+temp=temp->p;
+}
+if(f==0){
+cout<<"Number not found";
+}
+cout<<"\n";
+display();
+}
+void search(){
+cout<<"Searching.....\n";
+int i;
+int a;
+cout<<"Enter the number to be searched for\n";
+cin>>a;
+Num* temp=start;
+int f=0;
+for(i=0;i<c;i++){
+if(temp->num==a){
+cout<<"Number found at position "<<i<<"\n";
+f=1;
+break;
+}
+temp=temp->p;
+}
+if(f==0){
+cout<<"Number ID not found\n";
+}
+cout<<"\n";
+}
+void del(){
+cout<<"Deleting....\n";
+Num* temp=start;
+if(temp==NULL){
+cout<<"Stack is empty\n";
+}
+else{
+while(temp->p!=NULL){
+temp=temp->p;
+}
+free(temp);
+c--;
+}
+display();
+}
+};
+int main(){
+LinkList L1;
+int i;
+for(i=0;i<5;i++){
+L1.addnode();
+}
+L1.display();
+L1.del();
+L1.search();
+L1.replace();
+}
+Output:
+
+
+
+
